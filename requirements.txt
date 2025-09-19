@@ -1,12 +1,12 @@
-# Core LangChain packages (latest compatible versions)
+# Core LangChain packages
 langchain
 langchain-experimental==0.3.4
 langchain-openai==0.3.33
 langchain-community==0.3.29
 langchain-pinecone==0.2.12
 
-# Vector DB
-pinecone-client==2.1.2
+# Vector DB (latest Pinecone package compatible with Python 3.13)
+pinecone==2.2.2
 
 # PDF processing
 pypdf==6.0.0
@@ -22,7 +22,7 @@ transformers==4.34.0
 # Flask for backend
 flask==3.1.2
 
-# Optional for Google Generative AI (if used)
+# Optional for Google Generative AI
 google-generativeai==0.4.0
 
 # Vector similarity

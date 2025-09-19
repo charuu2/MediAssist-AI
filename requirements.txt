@@ -1,12 +1,12 @@
-# Core LangChain packages
-langchain
+# LangChain core
+langchain==0.3.27
 langchain-experimental==0.3.4
 langchain-openai==0.3.33
 langchain-community==0.3.29
 langchain-pinecone==0.2.12
 
-# Vector DB (latest Pinecone package compatible with Python 3.13)
-pinecone==2.2.2
+# Pinecone (latest compatible with langchain-pinecone)
+pinecone>=6.0.0,<8.0.0
 
 # PDF processing
 pypdf==6.0.0
@@ -14,16 +14,16 @@ pypdf==6.0.0
 # Environment variables
 python-dotenv==1.1.1
 
-# NLP & embeddings
+# NLP / embeddings
 sentence-transformers==2.2.2
-torch==2.2.0
+torch==2.8.0
 transformers==4.34.0
 
-# Flask for backend
+# Backend
 flask==3.1.2
 
-# Optional for Google Generative AI
-google-generativeai==0.4.0
+# Vector similarity / embeddings
+faiss-cpu==1.12.0
 
-# Vector similarity
-faiss-cpu==1.7.4
+# Optional (Google AI API if you need it, check Python 3.13 compatibility)
+# google-generativeai==0.4.0

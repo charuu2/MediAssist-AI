@@ -27,3 +27,4 @@ faiss-cpu==1.12.0
 
 # Optional (Google AI API if you need it, check Python 3.13 compatibility)
 # google-generativeai==0.4.0
+gunicorn

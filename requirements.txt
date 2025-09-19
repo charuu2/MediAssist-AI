@@ -1,7 +1,5 @@
-
-
-# Core LangChain packages
-
+# Core LangChain packages (latest compatible versions)
+langchain
 langchain-experimental==0.3.4
 langchain-openai==0.3.33
 langchain-community==0.3.29
@@ -21,8 +19,11 @@ sentence-transformers==2.2.2
 torch==2.2.0
 transformers==4.34.0
 
-# Optional for Google GenAI (if used)
+# Flask for backend
+flask==3.1.2
+
+# Optional for Google Generative AI (if used)
 google-generativeai==0.4.0
 
-# Utilities
+# Vector similarity
 faiss-cpu==1.7.4

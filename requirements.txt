@@ -1,25 +1,22 @@
-# Server
-flask==3.0.3
-gunicorn==21.2.0
-python-dotenv==1.0.1
+Flask==3.1.2
+gunicorn==23.0.0
 
-# LangChain ecosystem (latest stable matching versions)
-langchain==0.3.6
-langchain-core==0.3.15
-langchain-community==0.3.4
-langchain-text-splitters==0.3.2
-langchain-google-genai==2.0.9
-langchain-huggingface==0.0.3
-langchain-pinecone==0.1.1
+# LangChain ecosystem
+langchain==0.3.27
+langchain-community==0.3.29
+langchain-core==0.3.76
+langchain-google-genai==2.1.12
+langchain-huggingface==0.3.1
 
-# Data handling
-pypdf==4.2.0
-numpy==1.26.4
-scikit-learn==1.5.2
-
-# Embeddings & transformers (lightweight)
+# Embeddings & NLP
 sentence-transformers==2.2.2
-transformers==4.41.2
+transformers==4.34.0
+tokenizers==0.14.1
+faiss-cpu==1.12.0
 
-# Pinecone
-pinecone-client==3.2.2
+# Utils
+python-dotenv==1.1.1
+requests==2.32.5
+
+# Google Generative AI
+google-generativeai==0.7.0

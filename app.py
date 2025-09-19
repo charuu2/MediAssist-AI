@@ -10,11 +10,12 @@ def home():
 @app.route("/ask", methods=["POST"])
 def ask():
     user_message = request.json.get("message")
+    # Call backend function (lazy-loads model)
     answer, sources = ask_question(user_message)
     return jsonify({"answer": answer, "sources": sources})
-    
+
 if __name__ == "__main__":
     import os
     port = int(os.environ.get("PORT", 5000))
-    app.run(host="0.0.0.0", port=port)
-
+    # Use threaded server to save memory
+    app.run(host="0.0.0.0", port=port, threaded=True)

@@ -15,44 +15,54 @@ from langchain_core.prompts import ChatPromptTemplate
 load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
-# Load PDFs
-def load_pdf_file(data_path):
-    loader = DirectoryLoader(data_path, glob="*.pdf", loader_cls=PyPDFLoader)
-    return loader.load()
+# Globals for lazy loading
+_vectorstore = None
+_rag_chain = None
 
-extracted_data = load_pdf_file("Data/")
-text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
-text_chunks = text_splitter.split_documents(extracted_data)
-embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
-vectorstore = FAISS.from_documents(text_chunks, embeddings)
-retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":3})
+def load_vectorstore_and_chain():
+    global _vectorstore, _rag_chain
+    if _vectorstore is None or _rag_chain is None:
+        # Load PDFs
+        loader = DirectoryLoader("Data/", glob="*.pdf", loader_cls=PyPDFLoader)
+        extracted_data = loader.load()
 
-# LLM
-llm = ChatGoogleGenerativeAI(
-    model="gemini-1.5-flash",
-    google_api_key=GEMINI_API_KEY,
-    temperature=0.2,
-    max_output_tokens=300
-)
+        # Split text
+        text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+        text_chunks = text_splitter.split_documents(extracted_data)
 
-# RAG chain
-system_prompt = """You are a helpful medical assistant.
+        # Embeddings + vectorstore
+        embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+        _vectorstore = FAISS.from_documents(text_chunks, embeddings)
+        retriever = _vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":3})
+
+        # LLM
+        llm = ChatGoogleGenerativeAI(
+            model="gemini-1.5-flash",
+            google_api_key=GEMINI_API_KEY,
+            temperature=0.2,
+            max_output_tokens=300
+        )
+
+        # RAG chain
+        system_prompt = """You are a helpful medical assistant.
 Use the following context to answer concisely.
 If you don’t know, say 'I don’t know'. 
 Maximum 3 sentences.
 
 {context}"""
-prompt = ChatPromptTemplate.from_messages([
-    ("system", system_prompt),
-    ("human", "{input}")
-])
-qa_chain = create_stuff_documents_chain(llm, prompt)
-rag_chain = create_retrieval_chain(retriever, qa_chain)
+        prompt = ChatPromptTemplate.from_messages([
+            ("system", system_prompt),
+            ("human", "{input}")
+        ])
+        qa_chain = create_stuff_documents_chain(llm, prompt)
+        _rag_chain = create_retrieval_chain(retriever, qa_chain)
 
-# Ask question function
+    return _rag_chain
+
 def ask_question(query: str):
+    rag_chain = load_vectorstore_and_chain()  # Lazy-load on first request
     response = rag_chain.invoke({"input": query})
-    answer = response["answer"]
+    answer = response.get("answer", "I don't know")
     sources = []
     if "context" in response:
         for doc in response["context"]:

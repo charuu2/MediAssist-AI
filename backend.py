@@ -1,8 +1,7 @@
 # backend.py
 import os
 from dotenv import load_dotenv
-from langchain_community.embeddings import HuggingFaceBgeEmbeddings
-
+from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.document_loaders import PyPDFLoader, DirectoryLoader
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 
@@ -24,7 +23,7 @@ def load_pdf_file(data_path):
 extracted_data = load_pdf_file("Data/")
 text_splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
 text_chunks = text_splitter.split_documents(extracted_data)
-embeddings = HuggingFaceBgeEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
+embeddings = HuggingFaceEmbeddings(model_name='sentence-transformers/all-MiniLM-L6-v2')
 vectorstore = FAISS.from_documents(text_chunks, embeddings)
 retriever = vectorstore.as_retriever(search_type="similarity", search_kwargs={"k":3})
 

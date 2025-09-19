@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+<title>Medical Chatbot</title>
+<h1 id="chatTitle">MediAssist AI</h1>
+<footer id="chatFooter">Made by Charu Rajput</footer>
+
+
+<style>
+#chatFooter {
+  text-align: center;
+  font-family: 'Avenir';
+  font-size: 14px;
+  color: grey;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+#chatTitle {
+  text-align: center;
+  font-family: 'Avenir';
+  font-size: 32px;
+  color: #2c3e50;
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+
+* {
+  font-family: 'Avenir', sans-serif;
+}
+#chatContainer {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  height: 500px;
+  overflow-y: auto;
+  background-color: #f5f5f5;
+}
+#inputContainer {
+  display: flex;
+  max-width: 800px;
+  margin: 10px auto;
+}
+#userInput {
+  flex: 1;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+}
+#userInput:focus {
+  outline: none;
+  border-color: #6c8ea4;
+}
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 20px;
+  border: none;
+  background-color: #6c8ea4;
+  color: #fff;
+}
+button:hover {
+  background-color: #54788e;
+}
+
+.bubbleWrapper {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+}
+.inlineContainer {
+  display: inline-flex;
+  align-items: flex-end;
+}
+.inlineContainer.own {
+  flex-direction: row-reverse;
+}
+.inlineIcon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 8px;
+}
+.ownBubble {
+  min-width: 60px;
+  max-width: 700px;
+  padding: 14px 18px;
+  margin: 4px 0;
+  background-color: #5b5377;
+  border-radius: 20px 20px 0 20px;
+  border: 1px solid #443f56;
+  color: #fff;
+  word-wrap: break-word;
+}
+.otherBubble {
+  min-width: 60px;
+  max-width: 700px;
+  padding: 14px 18px;
+  margin: 4px 0;
+  background-color: #6c8ea4;
+  border-radius: 20px 20px 20px 0;
+  border: 1px solid #54788e;
+  color: #fff;
+  word-wrap: break-word;
+}
+.own {
+  align-self: flex-end;
+}
+.other {
+  align-self: flex-start;
+}
+span.own,
+span.other{
+  font-size: 12px;
+  color: grey;
+  margin-top: 2px;
+}
+</style>
+</head>
+<body>
+
+
+<div id="chatContainer">
+  <!-- Example messages -->
+  <div class="bubbleWrapper">
+    <div class="inlineContainer">
+      <img class="inlineIcon" src="https://cdn-icons-png.flaticon.com/512/327/327779.png">
+      <div class="otherBubble other">
+        Hello! I am your medical assistant. How can I help you today?
+      </div>
+    </div>
+    <span class="other">09:00</span>
+  </div>
+</div>
+
+
+
+
+
+
+<div id="inputContainer">
+  <input type="text" id="userInput" placeholder="Type your message...">
+  <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+function getCurrentTime() {
+  const now = new Date();
+  return now.getHours().toString().padStart(2,'0') + ":" + now.getMinutes().toString().padStart(2,'0');
+}
+
+function appendMessage(message, type="other") {
+  const chatContainer = document.getElementById("chatContainer");
+  const bubbleWrapper = document.createElement("div");
+  bubbleWrapper.className = "bubbleWrapper";
+
+  const inlineContainer = document.createElement("div");
+  inlineContainer.className = "inlineContainer" + (type === "own" ? " own" : "");
+
+  const img = document.createElement("img");
+  img.className = "inlineIcon";
+  img.src = type === "own" 
+            ? "https://cdn-icons-png.flaticon.com/512/201/201818.png"  // User
+            : "https://cdn-icons-png.flaticon.com/512/327/327779.png"; // Bot
+
+  const bubble = document.createElement("div");
+  bubble.className = type === "own" ? "ownBubble own" : "otherBubble other";
+  bubble.innerText = message;
+
+  const timestamp = document.createElement("span");
+  timestamp.className = type;
+  timestamp.innerText = getCurrentTime();
+
+  inlineContainer.appendChild(img);
+  inlineContainer.appendChild(bubble);
+  bubbleWrapper.appendChild(inlineContainer);
+  bubbleWrapper.appendChild(timestamp);
+  chatContainer.appendChild(bubbleWrapper);
+
+  // Scroll to latest message
+  chatContainer.scrollTop = chatContainer.scrollHeight;
+}
+
+async function sendMessage() {
+  const input = document.getElementById("userInput");
+  const message = input.value;
+  if (!message) return;
+
+  appendMessage(message, "own");
+  input.value = "";
+
+  const response = await fetch("/ask", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ message })
+  });
+
+  const data = await response.json();
+  appendMessage(data.answer, "other");
+}
+// Detect Enter key press
+document.getElementById("userInput").addEventListener("keydown", function(e) {
+  if (e.key === "Enter") {
+    e.preventDefault();  // prevent new line
+    sendMessage();
+  }
+});
+
+</script>
+
+</body>
+</html>

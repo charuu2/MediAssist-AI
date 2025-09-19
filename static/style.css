@@ -1,0 +1,116 @@
+/* General font */
+* {
+  font-family: 'Avenir', sans-serif;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* Chat container */
+#chatContainer {
+  max-width: 800px;
+  margin: 20px auto;
+  padding: 10px;
+  border-radius: 10px;
+  height: 500px;
+  overflow-y: auto;
+  background-color: #f0f4f7;
+  border: 1px solid #ccc;
+}
+
+/* Input container */
+#inputContainer {
+  display: flex;
+  max-width: 800px;
+  margin: 10px auto;
+}
+#userInput {
+  flex: 1;
+  padding: 12px 15px;
+  font-size: 16px;
+  border-radius: 20px;
+  border: 1px solid #ccc;
+  outline: none;
+}
+#userInput:focus {
+  border-color: #6c8ea4;
+}
+button {
+  margin-left: 10px;
+  padding: 12px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 20px;
+  background-color: #6c8ea4;
+  color: white;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+button:hover {
+  background-color: #5a7b91;
+}
+
+/* Chat bubbles */
+.bubbleWrapper {
+  padding: 8px 10px;
+  display: flex;
+  flex-direction: column;
+}
+.inlineContainer {
+  display: inline-flex;
+  align-items: flex-end;
+}
+.inlineContainer.own {
+  flex-direction: row-reverse;
+}
+
+/* User / Bot icons */
+.inlineIcon {
+  width: 35px;
+  height: 35px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 8px;
+}
+
+/* User message bubble */
+.ownBubble {
+  min-width: 60px;
+  max-width: 700px;
+  padding: 14px 20px;
+  margin: 4px 0;
+  background-color: #5b5377; /* user bubble */
+  border-radius: 20px 20px 0 20px;
+  border: 1px solid #443f56;
+  color: #fff;
+  word-wrap: break-word;
+}
+
+/* Bot message bubble */
+.otherBubble {
+  min-width: 60px;
+  max-width: 700px;
+  padding: 14px 20px;
+  margin: 4px 0;
+  background-color: #6c8ea4; /* bot bubble */
+  border-radius: 20px 20px 20px 0;
+  border: 1px solid #54788e;
+  color: #fff;
+  word-wrap: break-word;
+}
+
+/* Align bubbles */
+.own {
+  align-self: flex-end;
+}
+.other {
+  align-self: flex-start;
+}
+
+/* Timestamp */
+span.own,
+span.other {
+  font-size: 12px;
+  color: grey;
+  margin-top: 2px;
+}
